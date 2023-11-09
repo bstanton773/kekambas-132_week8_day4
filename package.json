@@ -7,7 +7,7 @@
         "start": "npm run bundle && npm-run-all --parallel watch serve",
         "bundle": "webpack",
         "watch": "webpack --watch",
-        "serve": "cd dist && live-server"
+        "serve": "cd dist && live-server --port=5555"
     },
     "author": "Brian",
     "license": "ISC",
