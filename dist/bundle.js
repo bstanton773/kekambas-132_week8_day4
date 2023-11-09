@@ -26,8 +26,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ Canvas)
 /* harmony export */ });
 class Canvas {
-    constructor(parent) {
+    constructor(parent, _components = []) {
         this.parent = parent;
+        this._components = _components;
         this.parent.innerHTML = '';
         this.parent.id = 'canvas';
         const newStyle = {
@@ -40,6 +41,57 @@ class Canvas {
             aspectRatio: '1 / 1'
         };
         Object.assign(this.parent.style, newStyle);
+    }
+    get components() {
+        return this._components;
+    }
+    addComponent(component) {
+        this.components.push(component);
+        component.canvas = this;
+        this.render();
+    }
+    render() {
+        this.parent.innerHTML = '';
+        for (const component of this.components) {
+            // build the component
+            this.buildComponent(component);
+        }
+    }
+    buildComponent(component) {
+        let div = this.initializeComponentDiv(component);
+        this.buildContainerShape(component, div);
+        this.placeComponent(component, div);
+        this.parent.append(div);
+    }
+    initializeComponentDiv(component) {
+        const div = document.createElement('div');
+        div.id = component.id;
+        const newStyle = {
+            margin: 'auto',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            alignContent: 'center',
+            padding: '3%',
+            aspectRatio: '1 / 1'
+        };
+        Object.assign(div.style, newStyle);
+        return div;
+    }
+    buildContainerShape(component, div) {
+        Object.assign(div.style, component.shape.attributes);
+    }
+    placeComponent(component, div) {
+        const newStyle = {
+            gridColumnStart: component.locationLeft.toString(),
+            gridColumnEnd: "span " + component.width,
+            gridRowStart: component.locationTop.toString(),
+            gridRowEnd: "span " + component.height
+        };
+        Object.assign(div.style, newStyle);
     }
 }
 
@@ -432,9 +484,7 @@ __webpack_require__.r(__webpack_exports__);
 const canvas = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Canvas(document.body);
 console.log(canvas);
 const firstComponent = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Component();
-console.log(firstComponent);
-console.log(firstComponent.shape);
-console.log(firstComponent.shape.attributes);
+canvas.addComponent(firstComponent);
 
 })();
 
