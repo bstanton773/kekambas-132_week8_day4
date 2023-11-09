@@ -8,10 +8,15 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Canvas: () => (/* reexport safe */ _Canvas__WEBPACK_IMPORTED_MODULE_0__["default"]),
-/* harmony export */   Component: () => (/* reexport safe */ _Component__WEBPACK_IMPORTED_MODULE_1__["default"])
+/* harmony export */   CircleContainer: () => (/* reexport safe */ _containers__WEBPACK_IMPORTED_MODULE_2__.CircleContainer),
+/* harmony export */   Component: () => (/* reexport safe */ _Component__WEBPACK_IMPORTED_MODULE_1__["default"]),
+/* harmony export */   LeftLeaningContainer: () => (/* reexport safe */ _containers__WEBPACK_IMPORTED_MODULE_2__.LeftLeaningContainer),
+/* harmony export */   RightLeaningContainer: () => (/* reexport safe */ _containers__WEBPACK_IMPORTED_MODULE_2__.RightLeaningContainer)
 /* harmony export */ });
 /* harmony import */ var _Canvas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 /* harmony import */ var _Component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
+/* harmony import */ var _containers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(4);
+
 
 
 
@@ -485,6 +490,20 @@ const canvas = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Canvas(document.body);
 console.log(canvas);
 const firstComponent = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Component();
 canvas.addComponent(firstComponent);
+// Create a new component with a Right Leaning Shape and move it around
+const rightComponent = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Component();
+rightComponent.shape = new _Widget__WEBPACK_IMPORTED_MODULE_0__.RightLeaningContainer();
+rightComponent.locationLeft = 8;
+rightComponent.locationTop = 3;
+rightComponent.width = 3;
+rightComponent.height = 3;
+canvas.addComponent(rightComponent);
+// Create a new component with a Circle container
+const circleComponent = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Component();
+circleComponent.shape = new _Widget__WEBPACK_IMPORTED_MODULE_0__.CircleContainer();
+circleComponent.locationLeft = 4;
+circleComponent.locationTop = 4;
+canvas.addComponent(circleComponent);
 
 })();
 
