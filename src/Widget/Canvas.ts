@@ -1,8 +1,13 @@
 import Component from "./Component";
+import { State } from './types';
 
 export default class Canvas{
 
-    constructor(private parent:HTMLElement, private _components: Component[] = []){
+    constructor(
+        private parent:HTMLElement, 
+        private _components: Component[] = [],
+        private _state: State = {}
+    ){
         this.parent.innerHTML = '';
         this.parent.id = 'canvas';
         const newStyle:Partial<CSSStyleDeclaration> = {
@@ -15,6 +20,14 @@ export default class Canvas{
             aspectRatio: '1 / 1'
         }
         Object.assign(this.parent.style, newStyle);
+    }
+
+    public get state(): State{
+        return this._state
+    }
+    public set state(value: State){
+        this._state = {...this.state, ...value};
+        this.render()
     }
 
     public get components():Component[]{
@@ -39,6 +52,7 @@ export default class Canvas{
         let div = this.initializeComponentDiv(component);
         this.buildContainerShape(component, div);
         this.placeComponent(component, div);
+        this.injectContent(component, div);
         this.parent.append(div);
     }
 
@@ -73,6 +87,16 @@ export default class Canvas{
             gridRowEnd: "span " + component.height
         }
         Object.assign(div.style, newStyle)
+    }
+
+    private injectContent(component:Component, div:HTMLDivElement){
+        div.innerHTML = component.content;
+        let key: keyof State;
+        for (key in this.state){
+            if (div.innerHTML.includes(`{{ ${key} }}`)){
+                div.innerHTML = div.innerHTML.split(`{{ ${key} }}`).join(this.state[key])
+            }
+        }
     }
 
 }

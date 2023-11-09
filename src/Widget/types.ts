@@ -9,3 +9,7 @@ export interface Containerable {
     zIndex: number
     attributes: Partial<Containerable>
 }
+
+export type State = {
+    [key:string]:any
+}

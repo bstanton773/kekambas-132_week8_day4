@@ -31,9 +31,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ Canvas)
 /* harmony export */ });
 class Canvas {
-    constructor(parent, _components = []) {
+    constructor(parent, _components = [], _state = {}) {
         this.parent = parent;
         this._components = _components;
+        this._state = _state;
         this.parent.innerHTML = '';
         this.parent.id = 'canvas';
         const newStyle = {
@@ -46,6 +47,13 @@ class Canvas {
             aspectRatio: '1 / 1'
         };
         Object.assign(this.parent.style, newStyle);
+    }
+    get state() {
+        return this._state;
+    }
+    set state(value) {
+        this._state = Object.assign(Object.assign({}, this.state), value);
+        this.render();
     }
     get components() {
         return this._components;
@@ -66,6 +74,7 @@ class Canvas {
         let div = this.initializeComponentDiv(component);
         this.buildContainerShape(component, div);
         this.placeComponent(component, div);
+        this.injectContent(component, div);
         this.parent.append(div);
     }
     initializeComponentDiv(component) {
@@ -97,6 +106,15 @@ class Canvas {
             gridRowEnd: "span " + component.height
         };
         Object.assign(div.style, newStyle);
+    }
+    injectContent(component, div) {
+        div.innerHTML = component.content;
+        let key;
+        for (key in this.state) {
+            if (div.innerHTML.includes(`{{ ${key} }}`)) {
+                div.innerHTML = div.innerHTML.split(`{{ ${key} }}`).join(this.state[key]);
+            }
+        }
     }
 }
 
@@ -488,7 +506,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const canvas = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Canvas(document.body);
 console.log(canvas);
+canvas.state = { firstName: 'Brian', lastName: 'Stanton', city: 'Chicago' };
 const firstComponent = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Component();
+firstComponent.content = "<h1>Hello {{ firstName }} {{ lastName }} </h1>";
 canvas.addComponent(firstComponent);
 // Create a new component with a Right Leaning Shape and move it around
 const rightComponent = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Component();
@@ -497,13 +517,17 @@ rightComponent.locationLeft = 8;
 rightComponent.locationTop = 3;
 rightComponent.width = 3;
 rightComponent.height = 3;
+rightComponent.content = '<h1>Hello World</h1>';
+// rightComponent.shape.zIndex = 10;
 canvas.addComponent(rightComponent);
 // Create a new component with a Circle container
 const circleComponent = new _Widget__WEBPACK_IMPORTED_MODULE_0__.Component();
 circleComponent.shape = new _Widget__WEBPACK_IMPORTED_MODULE_0__.CircleContainer();
-circleComponent.locationLeft = 4;
+circleComponent.locationLeft = 7;
 circleComponent.locationTop = 4;
+circleComponent.content = "<h3>{{ city }}</h3>";
 canvas.addComponent(circleComponent);
+canvas.state = { city: 'Detroit' };
 
 })();
 
